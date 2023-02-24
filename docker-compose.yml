@@ -8,19 +8,19 @@ services:
     env_file:
       - ./facade/.env
     depends_on:
-      # - messages
+      - message
       - logging
 
-  # messages:
-  #   build: ./messages
-  #   ports:
-  #     - "8001:8000"
-  #   env_file:
-  #     - ./messages/.env
+  message:
+    build: ./message
+    ports:
+      - "8001:8000"
+    env_file:
+      - ./message/.env
 
   logging:
     build: ./logging
     ports:
       - "8002:8000"
-    # env_file:
-    #   - ./logging/.env
+    env_file:
+      - ./logging/.env

@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-
 app = FastAPI()
 LOGGING_MAP = {}
 
@@ -11,12 +10,11 @@ class Message(BaseModel):
 
 @app.get("/")
 def get_logs():
-    return LOGGING_MAP
+    return ";".join(LOGGING_MAP.values())
 
 @app.post("/")
 def write_log(message: Message):
-    # TODO: add some logging
-    print("new msg: ", message)
+    print(f"new message: ", message)
     LOGGING_MAP[message.uuid] = message.body
 
     return message

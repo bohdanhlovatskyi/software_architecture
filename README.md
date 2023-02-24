@@ -1,7 +1,6 @@
 
-```sh
-colima start
-docker ps
+## How to run
 
-
+```
+docker-compose down && docker-compose build --no-cache && docker-compose up
 ```
