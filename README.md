@@ -2,5 +2,5 @@
 ## How to run
 
 ```
-docker-compose down && docker-compose build --no-cache && docker-compose up
+All the code for this part of the lab is in the hazelcast_experiments folder
 ```
