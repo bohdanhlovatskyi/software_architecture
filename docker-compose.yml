@@ -11,7 +11,7 @@ services:
       - message
       - logging-node-1
       - logging-node-2
-      # - logging-node-3
+      - logging-node-3
 
   message:
     build: ./message
@@ -33,7 +33,7 @@ services:
     depends_on:
       - logging-db-node-1
       - logging-db-node-2
-      # - logging-db-node-3
+      - logging-db-node-3
     tty: true
 
   logging-node-2:
@@ -45,21 +45,19 @@ services:
     depends_on:
       - logging-db-node-1
       - logging-db-node-2
-      # - logging-db-node-3
+      - logging-db-node-3
     tty: true
 
-  # logging-node-3:
-  #   build: ./logging
-  #   ports:
-  #     - "8004:8000"
-  #   env_file:
-  #     - ./logging/.env
-  #   networks:
-  #     - logging-network
-  #   depends_on:
-  #     - logging-db-node-1
-  #     - logging-db-node-2
-  #     - logging-db-node-3
+  logging-node-3:
+    build: ./logging
+    ports:
+      - "8004:8000"
+    env_file:
+      - ./logging/.env
+    depends_on:
+      - logging-db-node-1
+      - logging-db-node-2
+      - logging-db-node-3
 
   logging-db-node-1:
     image: hazelcast/hazelcast:5.2.1
@@ -76,14 +74,14 @@ services:
     - "5702:5701"
     environment:
     - HZ_CLUSTERNAME=hz_cls
-  
-  # logging-db-node-3:
-  #   image: hazelcast/hazelcast:5.2.1
-  #   container_name: logging-db-node-3
-  #   ports:
-  #   - "5703:5701"
-  #   environment:
-  #   - HZ_CLUSTERNAME=hz_cls
+
+  logging-db-node-3:
+    image: hazelcast/hazelcast:5.2.1
+    container_name: logging-db-node-3
+    ports:
+    - "5703:5701"
+    environment:
+    - HZ_CLUSTERNAME=hz_cls
 
   logging-management-center:
     image: hazelcast/management-center:5.2.1
