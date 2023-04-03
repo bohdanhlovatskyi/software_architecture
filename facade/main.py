@@ -1,5 +1,6 @@
 import os
 import uuid
+import random
 
 import aiohttp
 import asyncio
@@ -15,13 +16,16 @@ async def accept_message(msg: str) -> None:
     msg_id = str(uuid.uuid4())
 
     try:
-        logging_url = os.environ.get("LOGGING_SERVICE_URL")
+        logging_urls = os.environ.get("LOGGING_SERVICE_URLS").split(",")
+        rand_instance_id = random.randint(0, len(logging_urls) - 1)
+        logging_url = logging_urls[rand_instance_id]
     except Exception as ex:
         print(ex)
         return
 
     client: aiohttp.ClientSession = aiohttp.ClientSession()
 
+    print("sending msg ", msg_id, " to ", rand_instance_id, " instance")
     async with client.post(logging_url, json={"uuid": msg_id, "body": msg}) as resp:
         assert resp.status == 200
         await client.close()
@@ -32,8 +36,15 @@ async def get_messages():
     query_result = {}
 
     try:
-        logging_url = os.environ.get("LOGGING_SERVICE_URL")
+        # TODO: better way would be to query all of those, and 
+        # wait for the first to finish (it should pass all the info from db)
+        logging_urls = os.environ.get("LOGGING_SERVICE_URLS").split(",")
+        rand_instance_id = random.randint(0, len(logging_urls) - 1)
+        logging_url = logging_urls[rand_instance_id]
+
         message_url = os.environ.get("MESSAGE_SERVICE_URL")
+
+        print(f"logging url: |{logging_url}| message url: |{message_url}|")
     except Exception as ex:
         print(ex)
         return
