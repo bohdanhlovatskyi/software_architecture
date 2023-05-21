@@ -4,7 +4,7 @@ from fastapi import (
 )
 
 from domain import Message
-from service import log_message, get_all_messages
+from service import log_message, get_all_messages, save_message
 
 router = APIRouter()
 
@@ -17,4 +17,16 @@ async def post_messages(message: str):
     if len(message) == 0:
         raise HTTPException(status_code=400, detail="Empty message was passed")
 
-    return await log_message(Message(body=message))
+    msg = Message(body=message)
+    try:
+        log_msg_res = await log_message(msg)
+    except Exception as ex:
+
+        print(ex)
+
+    try:
+        save_msg_res = save_message(msg)
+    except Exception as ex:
+        print(ex)
+
+    return "OK"

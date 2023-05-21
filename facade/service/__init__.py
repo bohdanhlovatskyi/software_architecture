@@ -1,1 +1,1 @@
-from .app import log_message, get_all_messages
+from .app import log_message, get_all_messages, save_message
