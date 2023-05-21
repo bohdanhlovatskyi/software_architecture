@@ -9,9 +9,7 @@ from kafka import KafkaProducer, errors
 from domain import Message
 
 producer = KafkaProducer(
-    bootstrap_servers=[
-        os.environ["KAFKA_INSTANCE"]
-    ]
+    bootstrap_servers=os.environ["KAFKA_INSTANCE"]
 )
 
 async def log_message(message: Message) -> str:
@@ -58,7 +56,9 @@ async def get_all_messages() -> str:
         rand_instance_id = random.randint(0, len(logging_urls) - 1)
         logging_url = logging_urls[rand_instance_id]
 
-        message_url = os.environ.get("MESSAGE_SERVICE_URL")
+        message_urls = os.environ.get("MESSAGE_SERVICE_URL").split(",")
+        rand_instance_id = random.randint(0, len(message_urls) - 1)
+        message_url = message_urls[rand_instance_id]
 
         print(f"logging url: |{logging_url}| message url: |{message_url}|")
     except Exception as ex:
