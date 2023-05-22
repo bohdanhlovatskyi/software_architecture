@@ -21,7 +21,6 @@ async def post_messages(message: str):
     try:
         log_msg_res = await log_message(msg)
     except Exception as ex:
-
         print(ex)
 
     try:

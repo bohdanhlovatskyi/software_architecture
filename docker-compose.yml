@@ -1,47 +1,6 @@
 version: '0'
 
 services:
-  facade:
-    build: ./facade
-    ports:
-      - "8000:8000"
-    env_file:
-      - ./facade/.env
-    depends_on:
-      kafka:
-        condition: service_healthy
-      message-node-1:
-        condition: service_started
-      message-node-2:
-        condition: service_started
-      logging-node-1:
-        condition: service_started
-      logging-node-2:
-        condition: service_started
-      logging-node-3:
-        condition: service_started
-    restart: unless-stopped
-
-  message-node-1:
-    build: ./message
-    ports:
-      - "8001:8000"
-    env_file:
-      - ./message/.env
-    depends_on:
-      kafka:
-        condition: service_healthy
-
-  message-node-2:
-    build: ./message
-    ports:
-      - "8596:8000"
-    env_file:
-      - ./message/.env
-    depends_on:
-      kafka:
-        condition: service_healthy
-
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
@@ -89,45 +48,6 @@ services:
       echo -e 'Successfully created the following topics:'
       kafka-topics --bootstrap-server kafka:9092 --list
       "
-      
-  # TODO: better way to do this would be leaving only one node in here
-  # and running it via docker-compose --scale
-  # but this would complicate the task of the lab much (print instance id)
-  # (at least - up to my knownledge, which is very limited)
-  logging-node-1:
-    build: ./logging
-    ports:
-      - "8002:8000"
-    env_file:
-      - ./logging/.env
-    depends_on:
-      - logging-db-node-1
-      - logging-db-node-2
-      - logging-db-node-3
-    tty: true
-
-  logging-node-2:
-    build: ./logging
-    ports:
-      - "8003:8000"
-    env_file:
-      - ./logging/.env
-    depends_on:
-      - logging-db-node-1
-      - logging-db-node-2
-      - logging-db-node-3
-    tty: true
-
-  logging-node-3:
-    build: ./logging
-    ports:
-      - "8004:8000"
-    env_file:
-      - ./logging/.env
-    depends_on:
-      - logging-db-node-1
-      - logging-db-node-2
-      - logging-db-node-3
 
   logging-db-node-1:
     image: hazelcast/hazelcast:5.2.1

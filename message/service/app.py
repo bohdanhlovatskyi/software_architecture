@@ -1,10 +1,9 @@
-import asyncio
-from aiokafka import AIOKafkaConsumer
-
 from repository import IN_MEMORY_BD
 
 async def consume(consumer):
+    print("consumer starting")
     await consumer.start()
+    print("consumer started")
     try:
         async for msg in consumer:
             print(
@@ -14,6 +13,8 @@ async def consume(consumer):
                 msg.timestamp,
             )
             IN_MEMORY_BD.append(msg.value.decode("utf-8"))
+
+            await consumer.commit()
     finally:
         await consumer.stop()
 
