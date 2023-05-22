@@ -4,13 +4,24 @@ import aiohttp
 import asyncio
 
 from typing import List
-from kafka import KafkaProducer, errors
+from kafka import KafkaProducer, KafkaAdminClient, errors
+from kafka.admin import NewPartitions
 
 from domain import Message
 
 producer = KafkaProducer(
     bootstrap_servers=os.environ["KAFKA_INSTANCE"]
 )
+
+if len(producer.partitions_for(os.environ["KAFKA_TOPIC"])) == 1:
+    print("Increassing number of partitions to allow parallelisation for consumer")
+    admin_client = KafkaAdminClient(
+        bootstrap_servers=os.environ["KAFKA_INSTANCE"]
+    )
+
+    topic_partitions = {}
+    topic_partitions[os.environ["KAFKA_TOPIC"]] = NewPartitions(total_count=3)
+    admin_client.create_partitions(topic_partitions)
 
 async def log_message(message: Message) -> str:
     try:
@@ -86,4 +97,3 @@ async def log_msg(
         storage[key] = await get_message(client, url)
     except Exception as ex:
         print(ex)
-

@@ -14,6 +14,8 @@ async def consume(consumer):
                 msg.timestamp,
             )
             IN_MEMORY_BD.append(msg.value.decode("utf-8"))
+
+            await consumer.commit()
     finally:
         await consumer.stop()
 

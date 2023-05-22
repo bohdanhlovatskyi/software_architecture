@@ -17,7 +17,9 @@ loop = asyncio.get_event_loop()
 consumer = AIOKafkaConsumer(
     os.environ["KAFKA_TOPIC"],
     bootstrap_servers=os.environ["KAFKA_INSTANCE"],
-    loop=loop
+    loop=loop, 
+    group_id=os.environ["KAFKA_GROUP_ID"], 
+    session_timeout_ms=60000,
 )
 
 @app.get("/", status_code=status.HTTP_200_OK)
