@@ -15,14 +15,6 @@ zookeeper-server-start /usr/local/etc/kafka/zookeeper.properties
 kafka-server-start /usr/local/etc/kafka/server.properties
 ```
 
-
-```shell
-# start facade instance
-cd facade
-source env/bin/activate
-uvicorn main:app --host 127.0.0.1 --port 8000 --env-file .env
-```
-
 ```shell
 # from several terminals
 cd logging
@@ -36,4 +28,11 @@ python main --port <port>
 cd message
 source env/bin/activate
 python main --port <port>
+```
+
+```shell
+# start facade instance
+cd facade
+source env/bin/activate
+uvicorn main:app --host 127.0.0.1 --port 8000 --env-file .env
 ```
